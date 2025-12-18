@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form" style="max-width:500px;margin:20px auto">
+  <h3>📝 Register</h3>
+  <form method="post">
+    <label>👤 Role</label>
+    <select name="role" id="role" onchange="onRoleChange()">
+      <option value="student">Student</option>
+      <option value="teacher">Teacher</option>
+      <option value="admin">Admin</option>
+    </select>
+    <label>💻 Username</label>
+    <input name="username" required>
+    <label>🔒 Password</label>
+    <input name="password" type="password" required>
+
+    <div id="student-fields">
+      <label>🎓 Roll Number</label>
+      <input name="roll_number" placeholder="e.g., 001">
+      <label>📝 Full Name</label>
+      <input name="name">
+      <label>🏠 House Name</label>
+      <input name="house_name" placeholder="e.g., Green House">
+      <label>📚 Class</label>
+      <select name="class_grade">
+        {% for c in classes %}
+          <option value="{{c}}">Class {{c}}</option>
+        {% endfor %}
+      </select>
+      <p class="small" style="background:rgba(7,112,179,0.1);padding:10px;border-radius:6px;border-left:3px solid #0070b3">ℹ️ Your registration requires admin approval</p>
+    </div>
+
+    <div id="teacher-fields" style="display:none">
+      <label>📚 Assigned Subject</label>
+      <input name="assigned_subject" placeholder="e.g., Mathematics">
+      <p class="small" style="background:rgba(255,193,7,0.1);padding:10px;border-radius:6px;border-left:3px solid #ffc107">⚠️ Requires admin approval to access your account</p>
+    </div>
+
+    <div id="admin-fields" style="display:none">
+      <p class="small" style="background:rgba(255,193,7,0.1);padding:10px;border-radius:6px;border-left:3px solid #ffc107">⚠️ Admin account requires approval from an existing admin</p>
+    </div>
+
+    <div style="margin-top:20px;display:flex;gap:10px">
+      <button class="btn" type="submit" style="flex:1">✓ Register</button>
+      <a class="btn" style="flex:1;text-align:center;background:rgba(0,112,179,0.2);color:var(--button)" href="/">← Back</a>
+    </div>
+  </form>
+</div>
+
+<script>
+function onRoleChange(){
+  const role = document.getElementById('role').value;
+  document.getElementById('student-fields').style.display = role==='student' ? 'block' : 'none';
+  document.getElementById('teacher-fields').style.display = role==='teacher' ? 'block' : 'none';
+  document.getElementById('admin-fields').style.display = role==='admin' ? 'block' : 'none';
+}
+onRoleChange();
+</script>
+
+{% endblock %}

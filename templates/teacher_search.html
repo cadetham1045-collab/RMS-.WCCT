@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>🔍 Search Students by Class</h2>
+
+<div class="form" style="max-width:900px;margin:20px auto;padding:20px">
+  <div style="background:linear-gradient(135deg,rgba(7,112,179,0.1),rgba(113,181,223,0.1));padding:16px;border-radius:10px;margin-bottom:20px;border-left:4px solid var(--button)">
+    <h4 style="margin-top:0">📚 Subject: <span class="mark-display">{{ subject }}</span></h4>
+    <p style="margin:8px 0;font-size:0.9em;color:#555">Select a class to view all students and manage marks for your assigned subject</p>
+  </div>
+
+  <form method="post" style="margin-bottom:20px">
+    <label><strong>Select Class:</strong></label>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      {% for cls in classes %}
+        <button 
+          type="submit" 
+          name="class_grade" 
+          value="{{ cls }}"
+          style="flex:1;min-width:80px;padding:10px;border:2px solid #ddd;border-radius:4px;background:{% if selected_class==cls %}var(--button){% else %}white{% endif %};color:{% if selected_class==cls %}white{% else %}#333{% endif %};cursor:pointer;font-weight:bold"
+        >
+          Class {{ cls }}
+        </button>
+      {% endfor %}
+    </div>
+  </form>
+
+  {% if selected_class %}
+    {% if students %}
+      <div style="background:#f0f8ff;padding:12px;border-radius:6px;margin-bottom:15px;border-left:4px solid #2196F3">
+        <strong>{{ students|length }}</strong> student(s) found in Class {{ selected_class }}
+      </div>
+
+      <div style="overflow-x:auto">
+        <table style="min-width:900px;border-collapse:collapse;width:100%">
+          <thead>
+            <tr style="background:#f5f5f5">
+              <th style="text-align:left;padding:12px">Roll No.</th>
+              <th style="text-align:left;padding:12px">Student Name</th>
+              <th style="text-align:left;padding:12px">House</th>
+              <th style="text-align:center;padding:12px">1st Term</th>
+              <th style="text-align:center;padding:12px">2nd Term</th>
+              <th style="text-align:center;padding:12px">Board</th>
+              <th style="text-align:center;padding:12px">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for student in students %}
+              <tr style="border-bottom:1px solid #eee">
+                <td style="padding:12px"><strong>{{ student.roll_number }}</strong></td>
+                <td style="padding:12px">{{ student.name }}</td>
+                <td style="padding:12px">
+                  <span style="background:#e3f2fd;padding:4px 8px;border-radius:4px;font-size:0.9em">
+                    {{ student.house_name or 'N/A' }}
+                  </span>
+                </td>
+                <td style="padding:12px;text-align:center">
+                  {% if student.mark %}
+                    <span class="mark-display" style="background:#e3f2fd;padding:4px 8px;border-radius:4px">{{ student.mark.first_term|round(2) }}</span>
+                  {% else %}
+                    <span style="color:#999;font-style:italic">—</span>
+                  {% endif %}
+                </td>
+                <td style="padding:12px;text-align:center">
+                  {% if student.mark %}
+                    <span class="mark-display" style="background:#f3e5f5;padding:4px 8px;border-radius:4px">{{ student.mark.second_term|round(2) }}</span>
+                  {% else %}
+                    <span style="color:#999;font-style:italic">—</span>
+                  {% endif %}
+                </td>
+                <td style="padding:12px;text-align:center">
+                  {% if student.mark %}
+                    <span class="mark-display" style="background:#fff3e0;padding:4px 8px;border-radius:4px">{{ student.mark.board_mark|round(2) }}</span>
+                  {% else %}
+                    <span style="color:#999;font-style:italic">—</span>
+                  {% endif %}
+                </td>
+                <td style="padding:12px;text-align:center">
+                  {% if student.mark %}
+                    <a class="action-btn" href="/teacher/update/{{ student.mark.id }}">✏️ Edit</a>
+                  {% else %}
+                    <a class="action-btn" href="/teacher/add_mark?roll_number={{ student.roll_number }}">➕ Add</a>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top:20px;display:flex;gap:10px">
+        <a class="btn" href="/teacher">← Back to Dashboard</a>
+      </div>
+    {% else %}
+      <div class="flash warning">
+        ℹ️ No students found in Class {{ selected_class }}
+      </div>
+    {% endif %}
+  {% else %}
+    <div class="flash info" style="background:#cfe2ff;border-color:#084298;color:#084298">
+      ℹ️ Select a class above to view all students and manage marks
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}

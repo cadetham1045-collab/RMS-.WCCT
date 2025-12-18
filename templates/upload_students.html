@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>📚 Bulk Upload Students</h2>
+
+<div class="form" style="max-width:600px;margin:20px auto;padding:20px">
+  <p style="margin-bottom:15px;color:#555">Upload a CSV or Excel file to register multiple students at once.</p>
+  
+  <div style="background:#f0f8ff;padding:15px;border-radius:5px;margin-bottom:20px;border-left:4px solid #2196F3">
+    <strong>File Format Required:</strong>
+    <p style="margin:8px 0;font-size:0.9em">
+      The file must contain these columns (in any order):<br>
+      <code>roll_number</code>, <code>name</code>, <code>house_name</code>, <code>class_grade</code>
+    </p>
+    <p style="margin:8px 0;font-size:0.9em;color:#d32f2f">
+      <strong>Important:</strong> The roll number will be used as both username and password for login.
+    </p>
+    <p style="margin:8px 0;font-size:0.9em">
+      <strong>Example:</strong><br>
+      roll_number | name | house_name | class_grade<br>
+      001 | Ahmad Ali | Iqbal | 10<br>
+      002 | Fatima Khan | Quaid | 10
+    </p>
+  </div>
+
+  <form method="post" enctype="multipart/form-data">
+    <div style="margin-bottom:15px">
+      <label for="file"><strong>Select File (CSV or XLSX):</strong></label>
+      <input type="file" id="file" name="file" accept=".csv,.xlsx,.xls" required style="display:block;width:100%;padding:10px;margin-top:8px;border:1px solid #ccc;border-radius:4px">
+      <small style="color:#999">Accepted formats: CSV, XLSX, XLS (max 16MB)</small>
+    </div>
+
+    <div style="display:flex;gap:10px">
+      <button class="btn" type="submit">📤 Upload & Register Students</button>
+      <a class="btn" href="/admin" style="background-color:#888">← Back to Admin</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

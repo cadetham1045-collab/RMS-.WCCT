@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>➕ Add Mark</h2>
+
+<div class="form" style="max-width:600px;margin:0 auto">
+  <div style="background:linear-gradient(135deg,rgba(7,112,179,0.1),rgba(113,181,223,0.1));padding:12px;border-radius:8px;margin-bottom:16px;border-left:4px solid var(--button)">
+    <p style="margin:4px 0"><strong>📚 Subject:</strong> <span class="mark-display">{{ current_user.assigned_subject }}</span></p>
+  </div>
+  
+  <form method="post">
+    <label>🎓 Student Roll Number</label>
+    <select name="roll_number" required>
+      <option value="">— Select Student —</option>
+      {% for s in students %}
+        <option value="{{ s.roll_number }}">{{ s.roll_number }} — {{ s.name }} (Class {{ s.class_grade }})</option>
+      {% endfor %}
+    </select>
+    
+    <label>📝 1st Term Marks (out of 100)</label>
+    <input name="first_term" type="number" step="0.01" min="0" max="100" placeholder="0.00">
+    
+    <label>📘 2nd Term Marks (out of 100)</label>
+    <input name="second_term" type="number" step="0.01" min="0" max="100" placeholder="0.00">
+    
+    <label>🏆 Board Marks (out of 100)</label>
+    <input name="board_mark" type="number" step="0.01" min="0" max="100" placeholder="0.00">
+    
+    <p class="small" style="background:rgba(7,112,179,0.1);padding:10px;border-radius:6px;border-left:3px solid var(--button)">ℹ️ Fill at least one term to add marks</p>
+    
+    <div style="margin-top:20px;display:flex;gap:10px">
+      <button class="btn" type="submit">✓ Add Mark</button>
+      <a class="btn" style="flex:1;text-align:center;background:rgba(0,112,179,0.2);color:var(--button)" href="/teacher">← Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

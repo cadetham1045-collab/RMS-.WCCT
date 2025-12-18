@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>🖼️ Upload Login Page Background</h2>
+<div class="form" style="max-width:500px;margin:0 auto">
+  <p class="small" style="background:rgba(7,112,179,0.1);padding:12px;border-radius:6px;border-left:3px solid var(--button)">
+    ℹ️ This image will appear as background on all login pages. Supported formats: PNG, JPG, JPEG, GIF, WEBP (Max 16MB)
+  </p>
+  <form method="post" enctype="multipart/form-data">
+    <label>🖼️ Choose Background Image</label>
+    <input type="file" name="background" accept="image/*" required>
+    <p class="small" style="color:#666;margin-top:8px">💡 Tip: Use a landscape image (1920x1080 or wider) for best results</p>
+    <div style="margin-top:20px;display:flex;gap:10px">
+      <button class="btn" type="submit" style="flex:1">✓ Upload Background</button>
+      <a class="btn" style="flex:1;text-align:center;background:rgba(0,112,179,0.2);color:var(--button)" href="/admin">← Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

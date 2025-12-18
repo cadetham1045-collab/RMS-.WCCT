@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>👨‍🎓 Student Dashboard</h2>
+
+<div class="quick-links">
+  <a href="/">🏠 Home</a>
+</div>
+
+{% if student %}
+  <div style="background:linear-gradient(135deg,rgba(7,112,179,0.1),rgba(113,181,223,0.1));padding:16px;border-radius:10px;margin-bottom:20px;border-left:4px solid var(--button)">
+    <h4 style="margin-top:0">👤 Student Information</h4>
+    <table style="background:transparent;box-shadow:none;margin-top:8px">
+      <tr><td style="font-weight:600;color:var(--panel)">Name:</td><td><strong>{{ student.name }}</strong></td></tr>
+      <tr><td style="font-weight:600;color:var(--panel)">Roll Number:</td><td><strong>{{ student.roll_number }}</strong></td></tr>
+      <tr><td style="font-weight:600;color:var(--panel)">Class:</td><td><strong>{{ student.class_grade }}</strong></td></tr>
+    </table>
+  </div>
+
+  {% if marks %}
+    <div class="boxes">
+      <div class="box">
+        <h4>📝 1st Term</h4>
+        {% for m in marks %}
+          <p><strong>{{ m.subject }}</strong><br><span class="mark-display">{{ m.first_term|round(2) }}/100</span></p>
+        {% endfor %}
+      </div>
+      <div class="box">
+        <h4>📘 2nd Term</h4>
+        {% for m in marks %}
+          <p><strong>{{ m.subject }}</strong><br><span class="mark-display">{{ m.second_term|round(2) }}/100</span></p>
+        {% endfor %}
+      </div>
+      <div class="box">
+        <h4>🏆 Board</h4>
+        {% for m in marks %}
+          <p><strong>{{ m.subject }}</strong><br><span class="mark-display">{{ m.board_mark|round(2) }}/100</span></p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <h3>📊 Detailed Results</h3>
+    <table>
+      <tr><th>Subject</th><th>1st Term</th><th>2nd Term</th><th>Board</th><th>Total</th></tr>
+      {% for m in marks %}
+        {% set total = m.first_term + m.second_term + m.board_mark %}
+        <tr>
+          <td><strong>{{ m.subject }}</strong></td>
+          <td><span class="mark-display">{{ m.first_term|round(2) }}</span></td>
+          <td><span class="mark-display">{{ m.second_term|round(2) }}</span></td>
+          <td><span class="mark-display">{{ m.board_mark|round(2) }}</span></td>
+          <td><span class="mark-display" style="color:#28a745;font-size:18px">{{ total|round(2) }}</span></td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <div class="flash info" style="background:#cfe2ff;border-color:#084298;color:#084298">
+      ℹ️ Your marks have not been entered yet. Check back later!
+    </div>
+  {% endif %}
+{% else %}
+  <div class="flash danger">
+    ❌ No student profile found for this account.
+  </div>
+{% endif %}
+{% endblock %}

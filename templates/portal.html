@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div style="margin-bottom:20px">
+      {% for category, msg in messages %}
+        <div class="flash {{ category }}" style="display:flex;justify-content:space-between;align-items:center">
+          <span>{{ msg }}</span>
+          <button style="background:none;border:none;color:inherit;cursor:pointer;font-size:18px" onclick="this.parentElement.style.display='none'">×</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<div class="portal-grid">
+  <div class="portal-card">
+    <div class="portal-icon">⚙️</div>
+    <h2>Admin Portal</h2>
+    <a class="card-btn" href="/login?role=admin">Open Admin Login</a>
+  </div>
+  <div class="portal-card">
+    <div class="portal-icon">👨‍🏫</div>
+    <h2>Teacher Portal</h2>
+    <a class="card-btn" href="/login?role=teacher">Open Teacher Login</a>
+  </div>
+  <div class="portal-card">
+    <div class="portal-icon">👨‍🎓</div>
+    <h2>Student Portal</h2>
+    <a class="card-btn" href="/login?role=student">Open Student Login</a>
+  </div>
+</div>
+{% endblock %}

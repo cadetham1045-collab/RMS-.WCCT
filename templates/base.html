@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>RMS - WAPDA Cadet College</title>
+    <link rel="stylesheet" href="/static/style.css">
+  </head>
+  <body>
+    <div class="nav">
+      <div class="nav-content">
+        {% if request.path != '/' %}
+          <button class="nav-back-btn" onclick="history.back()" title="Go back">←</button>
+        {% endif %}
+        {% if logo_path %}
+          <img src="{{ logo_path }}" alt="Logo" class="logo">
+        {% endif %}
+        <span>WAPDA CADET COLLEGE TARBELA — Results Management System</span>
+      </div>
+      {% if current_user.is_authenticated %}
+        <a class="logout" href="/logout">Logout</a>
+      {% endif %}
+    </div>
+    <div class="container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, msg in messages %}
+            <div class="flash {{ category }}">{{ msg }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </div>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="login-page" {% if bg_image_path %}style="background-image:url('{{ bg_image_path }}');background-size:cover;background-position:center;background-attachment:fixed"{% endif %}>
+  <div class="login-overlay"></div>
+  <div class="login-form-container">
+    <div class="form login-form">
+      <h3>🔐 Login {% if role %} — {{ role|capitalize }}{% endif %}</h3>
+      <form method="post">
+        <label>👤 Username</label>
+        <input name="username" required autofocus>
+        <label>🔒 Password</label>
+        <input name="password" type="password" required>
+        <div style="margin-top:20px;display:flex;gap:10px">
+          <button class="btn login-btn" type="submit" style="flex:1">✓ Login</button>
+          <a class="btn register-btn" style="flex:1;text-align:center" href="/register">Register</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

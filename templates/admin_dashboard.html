@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>👨‍💼 Admin Dashboard</h2>
+
+<div class="quick-links">
+  <a href="/">🏠 Home</a>
+  <a href="/admin/upload_logo">📤 Upload Logo</a>
+  <a href="/admin/upload_background">🖼️ Upload Background</a>
+  <a href="/admin/add_student">➕ Add Student</a>
+  <a href="/admin/add_mark">📊 Add Mark</a>
+  <a href="/admin/class_results">📈 Class Results</a>
+  <a href="/admin/upload_students">👥 Bulk Upload Students</a>
+  <a href="/admin/upload_results">📋 Bulk Upload Results</a>
+  <a href="/search">🔍 Search Students</a>
+  <form method="post" action="/admin/reset_teachers" style="display:inline">
+    <button class="btn" style="background:#ff7043;border:none;padding:6px 10px;margin-left:6px" onclick="return confirm('Reset all teacher passwords to 1234?')">🔑 Reset Teacher Passwords</button>
+  </form>
+</div>
+
+<div class="expandable">
+  <div class="expandable-header" onclick="toggleSection(this)">
+    <span>👥 Pending Admins ({{ admins|selectattr('approved', 'equalto', False)|list|length }})</span>
+    <span class="toggle-icon">⌄</span>
+  </div>
+  <div class="expandable-content">
+    {% set pending_admins = admins|selectattr('approved', 'equalto', False)|list %}
+    {% if pending_admins %}
+      <table>
+        <tr><th>Username</th><th>Status</th><th>Action</th></tr>
+        {% for a in pending_admins %}
+          <tr>
+            <td><strong>{{ a.username }}</strong></td>
+            <td><span class="status-badge pending">Pending</span></td>
+            <td><a class="action-btn" href="/admin/approve_admin/{{ a.id }}">✓ Approve</a></td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <p class="small" style="padding:10px 0">✓ No pending admin approvals</p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="expandable">
+  <div class="expandable-header" onclick="toggleSection(this)">
+    <span>🏫 Teachers ({{ teachers|selectattr('approved', 'equalto', False)|list|length }} pending)</span>
+    <span class="toggle-icon">⌄</span>
+  </div>
+  <div class="expandable-content">
+    {% if teachers %}
+      <table>
+        <tr><th>Username</th><th>Subject</th><th>Status</th><th>Actions</th></tr>
+        {% for t in teachers %}
+          <tr>
+            <td><strong>{{ t.username }}</strong></td>
+            <td>{{ t.assigned_subject or '—' }}</td>
+            <td><span class="status-badge {% if t.approved %}approved{% else %}pending{% endif %}">{{ 'Approved' if t.approved else 'Pending' }}</span></td>
+            <td>
+              {% if not t.approved %}
+                <a class="action-btn" href="/admin/approve/{{ t.id }}">✓ Approve</a>
+              {% endif %}
+              <a class="action-btn" href="/admin/delete_teacher/{{ t.id }}" onclick="return confirm('Delete this teacher?')">🗑️ Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <p class="small" style="padding:10px 0">No teachers registered</p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="expandable">
+  <div class="expandable-header" onclick="toggleSection(this)">
+    <span>👨‍🎓 Pending Students ({{ pending_students|length }})</span>
+    <span class="toggle-icon">⌄</span>
+  </div>
+  <div class="expandable-content">
+    {% if pending_students %}
+      <table>
+        <tr><th>Roll No.</th><th>Name</th><th>Class</th><th>House</th><th>Status</th><th>Actions</th></tr>
+        {% for s in pending_students %}
+          <tr>
+            <td><strong>{{ s.roll_number }}</strong></td>
+            <td>{{ s.name }}</td>
+            <td>{{ s.class_grade }}</td>
+            <td>{{ s.house_name or '—' }}</td>
+            <td><span class="status-badge pending">Pending</span></td>
+            <td>
+              <a class="action-btn" href="/admin/approve_student/{{ s.user_id }}">✓ Approve</a>
+              <a class="action-btn" href="/admin/delete_student/{{ s.user_id }}" onclick="return confirm('Delete this student?')">🗑️ Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <p class="small" style="padding:10px 0">✓ No pending student approvals</p>
+    {% endif %}
+  </div>
+</div>
+
+<div class="expandable">
+  <div class="expandable-header" onclick="toggleSection(this)">
+    <span>👨‍🎓 Students ({{ approved_students|length }} approved)</span>
+    <span class="toggle-icon">⌄</span>
+  </div>
+  <div class="expandable-content">
+    {% if approved_students %}
+      <table>
+        <tr><th>Roll No.</th><th>Name</th><th>Class</th><th>House</th><th>Subjects</th><th>Actions</th></tr>
+        {% for s in approved_students %}
+          <tr>
+            <td><strong>{{ s.roll_number }}</strong></td>
+            <td>{{ s.name }}</td>
+            <td>{{ s.class_grade }}</td>
+            <td>{{ s.house_name or '—' }}</td>
+            <td>
+              {% set marks = s.marks %}
+              {% if marks %}
+                <span class="small">{{ marks|map(attribute='subject')|unique|list|join(', ') }}</span>
+              {% else %}
+                <span class="small">—</span>
+              {% endif %}
+            </td>
+            <td>
+              <a class="action-btn" href="/admin/delete_student/{{ s.user_id }}" onclick="return confirm('Delete this student?')">🗑️ Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <p class="small" style="padding:10px 0">No approved students</p>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+function toggleSection(header) {
+  const content = header.nextElementSibling;
+  const icon = header.querySelector('.toggle-icon');
+  content.classList.toggle('active');
+  icon.classList.toggle('active');
+}
+</script>
+{% endblock %}

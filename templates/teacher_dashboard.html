@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>👨‍🏫 Teacher Dashboard</h2>
+
+<div class="quick-links">
+  <a href="/">🏠 Home</a>
+  <a href="/teacher/add_mark">➕ Add Mark</a>
+  <a href="/teacher/search">🔍 Search by Class</a>
+  <a href="/search">🔍 Search Students</a>
+</div>
+
+{% if not subject %}
+  <div class="flash warning">
+    ⚠️ Your assigned subject is not set. Please contact your admin to be assigned and approved.
+  </div>
+{% else %}
+  <div style="background:linear-gradient(135deg,rgba(7,112,179,0.1),rgba(113,181,223,0.1));padding:16px;border-radius:10px;margin-bottom:16px;border-left:4px solid var(--button)">
+    <h4 style="margin-top:0">📚 Assigned Subject: <span class="mark-display">{{ subject }}</span></h4>
+  </div>
+
+  {% if marks %}
+    <table>
+      <tr>
+        <th>Roll No.</th>
+        <th>Student Name</th>
+        <th>Class</th>
+        <th>1st Term</th>
+        <th>2nd Term</th>
+        <th>Board</th>
+        <th>Action</th>
+      </tr>
+      {% for m in marks %}
+        <tr>
+          <td><strong>{{ m.student.roll_number }}</strong></td>
+          <td>{{ m.student.name }}</td>
+          <td>{{ m.class_grade }}</td>
+          <td><span class="mark-display">{{ m.first_term|round(2) }}</span></td>
+          <td><span class="mark-display">{{ m.second_term|round(2) }}</span></td>
+          <td><span class="mark-display">{{ m.board_mark|round(2) }}</span></td>
+          <td><a class="action-btn" href="/teacher/update/{{ m.id }}">✏️ Edit</a></td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% else %}
+    <div class="flash info" style="background:#cfe2ff;border-color:#084298;color:#084298">
+      ℹ️ No marks entered yet for this subject.
+    </div>
+  {% endif %}
+{% endif %}
+{% endblock %}
